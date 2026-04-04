@@ -51,13 +51,13 @@ public static class BuilderConfiguration
         var discordBotToken = configuration["DISCORD_BOT_TOKEN"];
         if (string.IsNullOrEmpty(discordBotToken))
         {
-            throw new ArgumentException(discordBotToken, "DISCORD_BOT_TOKEN must be provided");
+            throw new ArgumentNullException(discordBotToken, "DISCORD_BOT_TOKEN must be provided");
         }
         
         var discordReminderChannelId = configuration["DISCORD_REMINDER_CHANNELID"];
         if (string.IsNullOrEmpty(discordReminderChannelId))
         {
-            throw new ArgumentException(discordReminderChannelId, "DISCORD_REMINDER_CHANNELID must be provided");
+            throw new ArgumentNullException(discordReminderChannelId, "DISCORD_REMINDER_CHANNELID must be provided");
         }
     }
 }
