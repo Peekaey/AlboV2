@@ -4,6 +4,21 @@
         <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
+
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="NetCord" Version="1.0.0-alpha.480" />
+      <PackageReference Include="NetCord.Hosting" Version="1.0.0-alpha.480" />
+      <PackageReference Include="NetCord.Hosting.AspNetCore" Version="1.0.0-alpha.480" />
+      <PackageReference Include="NetCord.Hosting.Services" Version="1.0.0-alpha.480" />
+      <PackageReference Include="NetCord.Services" Version="1.0.0-alpha.480" />
+    </ItemGroup>
 
 </Project>
