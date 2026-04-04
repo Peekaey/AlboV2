@@ -1,3 +1,5 @@
+using AlboV2.DiscordBot.Startup;
+
 namespace AlboV2.DiscordBot;
 
 public class Program
@@ -5,20 +7,14 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-
-        // Add services to the container.
-
-        builder.Services.AddControllers();
-
+        BuilderConfiguration.ValidateEnvironmentVariables(builder);
+        BuilderConfiguration.ConfigureServicesBuilder(builder);
+        BuilderConfiguration.ConfigureNetCordBuilder(builder);
+        
         var app = builder.Build();
-
-        // Configure the HTTP request pipeline.
-
-        app.UseAuthorization();
-
-
-        app.MapControllers();
-
+        
+        AppConfiguration.ConfigureApp(app);
+        
         app.Run();
     }
 }
