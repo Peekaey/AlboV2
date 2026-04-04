@@ -8,6 +8,7 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
         BuilderConfiguration.ValidateEnvironmentVariables(builder);
+        BuilderConfiguration.ConfigureMiscServicesBuilder(builder);
         BuilderConfiguration.ConfigureServicesBuilder(builder);
         BuilderConfiguration.ConfigureNetCordBuilder(builder);
         

@@ -1,3 +1,4 @@
+using AlboV2.Services.DiscordCommands;
 using NetCord;
 using NetCord.Gateway;
 using NetCord.Hosting.Gateway;
@@ -28,9 +29,9 @@ public static class BuilderConfiguration
             .AddSingleton<RestClient>(sp => new RestClient(restClientToken));
     }
 
-    public static void ConfigureServicesBuilder(WebApplicationBuilder builder)
+    public static void ConfigureMiscServicesBuilder(WebApplicationBuilder builder)
     {
-        Console.WriteLine("Executing ConfigureServices...");
+        Console.WriteLine("Executing ConfigureMiscServicesBuilder...");
         
         builder.Services.AddLogging(logger =>
         {
@@ -40,11 +41,22 @@ public static class BuilderConfiguration
         });
         
         builder.Services.AddControllers();
+        
+    }
+
+    public static void ConfigureServicesBuilder(WebApplicationBuilder builder)
+    {
+        Console.WriteLine("Executing ConfigureServicesBuilder...");
+
+        builder.Services.AddMediatR(config =>
+        {
+            config.RegisterServicesFromAssemblyContaining<GetPingQuery>();
+        });
     }
 
     public static void ValidateEnvironmentVariables(WebApplicationBuilder builder)
     {
-        Console.WriteLine("Executing ValidateEnvironmentVariables...");
+        Console.WriteLine("Executing ValidateEnvironmentVariablesBuilder...");
         
         var configuration = builder.Configuration;
         
@@ -60,4 +72,6 @@ public static class BuilderConfiguration
             throw new ArgumentNullException(discordReminderChannelId, "DISCORD_REMINDER_CHANNELID must be provided");
         }
     }
+    
+
 }
