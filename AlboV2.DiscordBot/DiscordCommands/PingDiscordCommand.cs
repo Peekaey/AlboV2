@@ -1,5 +1,5 @@
 using System.Diagnostics;
-using AlboV2.Services.DiscordCommands;
+using AlboV2.Features.DiscordCommands;
 using AlboV2.Shared.Helpers;
 using MediatR;
 using NetCord.Rest;

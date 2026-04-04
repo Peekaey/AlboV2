@@ -1,6 +1,6 @@
-using AlboV2.Services.DiscordCommands;
+using AlboV2.Features.DiscordCommands;
 
-namespace AlboV2.Tests.MediatR;
+namespace AlboV2.Tests.Features.DiscordCommands;
 
 public class GetPingQueryHandlerTests
 {

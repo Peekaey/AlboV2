@@ -1,4 +1,4 @@
-using AlboV2.Services.DiscordCommands;
+using AlboV2.Features.DiscordCommands;
 using NetCord;
 using NetCord.Gateway;
 using NetCord.Hosting.Gateway;
