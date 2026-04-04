@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace AlboV2.Services.DiscordCommands;
+namespace AlboV2.Features.DiscordCommands;
 
 public record GetPingQuery(): IRequest<PingResult>;
 
