@@ -1,0 +1,6 @@
+@AlboV2.DiscordBot_HostAddress = http://localhost:5033
+
+GET {{AlboV2.DiscordBot_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
