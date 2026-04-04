@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlboV2.DiscordBot", "AlboV2.DiscordBot\AlboV2.DiscordBot.csproj", "{D04D6838-533C-4354-8628-352B7D66FAF4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlboV2.Services", "AlboV2.Services\AlboV2.Services.csproj", "{F197C98C-578F-41DA-A277-B2756C6E1BE7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlboV2.Features", "AlboV2.Features\AlboV2.Features.csproj", "{F197C98C-578F-41DA-A277-B2756C6E1BE7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlboV2.Tests", "AlboV2.Tests\AlboV2.Tests.csproj", "{C1660643-A9AE-4F8B-83FF-DFA228F466A8}"
 EndProject
