@@ -56,7 +56,7 @@ public static class BuilderConfiguration
 
     public static void ValidateEnvironmentVariables(WebApplicationBuilder builder)
     {
-        Console.WriteLine("Executing ValidateEnvironmentVariablesBuilder...");
+        Console.WriteLine("Executing ValidateEnvironmentVariables...");
         
         var configuration = builder.Configuration;
         
