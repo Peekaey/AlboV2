@@ -45,11 +45,11 @@ public class RemindEveryoneToDisconnectCommand : ApplicationCommandModule<Applic
         }
         catch (Exception e)
         {
-            _logger.LogInteractionError(e, stopwatch.Elapsed.Seconds);
+            _logger.LogInteractionError(e, stopwatch.Elapsed.TotalSeconds);
 
             await Context.Interaction.SendFollowupMessageAsync(new InteractionMessageProperties
             {
-                Content = "Unexpected error occured when running the remind_everyone_to_disconnect command"
+                Content = "Unexpected error occurred when running the remind_everyone_to_disconnect command"
             });
         }
         

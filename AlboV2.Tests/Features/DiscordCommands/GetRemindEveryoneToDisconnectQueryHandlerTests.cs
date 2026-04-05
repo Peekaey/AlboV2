@@ -21,7 +21,7 @@ public class GetRemindEveryoneToDisconnectQueryHandlerTests : IDisposable
         // Arrange
         Directory.CreateDirectory(_targetDirectory);
         
-        for (int i = 1; i <= 5; i++)
+        for (int i = 1; i <= 6; i++)
         {
             string filePath = Path.Combine(_targetDirectory, $"albo{i}.mov");
             await File.WriteAllBytesAsync(filePath, new byte[] { 0x00, 0x00 }); 

@@ -1,6 +1,6 @@
 namespace AlboV2.Shared.Helpers;
 
-public static class ImageHelperExtensions
+public static class ImageHelpers
 {
     public static string GetRngAlboFilename()
     {
@@ -11,7 +11,6 @@ public static class ImageHelperExtensions
 
     private static int GetRandomNumber()
     {
-        Random rnd = new Random();
-        return rnd.Next(1, 6);
+        return Random.Shared.Next(1, 7);
     }
 }

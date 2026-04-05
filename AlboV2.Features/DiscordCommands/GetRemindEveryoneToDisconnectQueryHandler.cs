@@ -19,12 +19,12 @@ public class GetRemindEveryoneToDisconnectQueryHandler : IRequestHandler<GetRemi
     public ValueTask<RemindEveryoneToDisconnectResult> Handle(GetRemindEveryoneToDisconnectQuery request,
         CancellationToken cancellationToken)
     {
-        string fileName = ImageHelperExtensions.GetRngAlboFilename();
+        string fileName = ImageHelpers.GetRngAlboFilename();
         string imagePath= Path.Combine(AppContext.BaseDirectory, "Assets", "Albo", fileName);
 
         if (!File.Exists(imagePath))
         {
-            throw new FileNotFoundException("albo.mov", imagePath);
+            throw new FileNotFoundException(fileName, imagePath);
         }
         
         FileStream fileStream = File.OpenRead(imagePath);
