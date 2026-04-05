@@ -17,10 +17,14 @@
 
     <ItemGroup>
       <Folder Include="Assets\Turnbull\" />
+        <Folder Include="Assets\Albo\" />
     </ItemGroup>
 
     <ItemGroup>
         <None Update="Assets\Turnbull\MalcolmTurnbull.jpg">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\Albo\**\*">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
