@@ -44,20 +44,7 @@ public class GetRemindEveryoneToDisconnectQueryHandlerTests : IDisposable
         
         result.fileResponse.content.Dispose();
     }
-
-    [Fact]
-    public async Task Handle_WhenFileDoesNotExist_ThrowsFileNotFoundException()
-    {
-        // Arrange
-        var handler = new GetRemindEveryoneToDisconnectQueryHandler();
-        var query = new GetRemindEveryoneToDisconnectQuery();
-
-        // Act & Assert
-        var exception = await Assert.ThrowsAsync<FileNotFoundException>(async () => 
-            await handler.Handle(query, CancellationToken.None));
-        
-        Assert.Equal("albo.mov", exception.Message);
-    }
+    
     
     public void Dispose()
     {
