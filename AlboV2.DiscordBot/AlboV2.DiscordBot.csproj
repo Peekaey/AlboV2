@@ -14,7 +14,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="MediatR" Version="14.1.0" />
+      <PackageReference Include="Mediator.Abstractions" Version="3.0.2" />
+      <PackageReference Include="Mediator.SourceGenerator" Version="3.0.2">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
       <PackageReference Include="NetCord" Version="1.0.0-alpha.480" />
       <PackageReference Include="NetCord.Hosting" Version="1.0.0-alpha.480" />
       <PackageReference Include="NetCord.Hosting.AspNetCore" Version="1.0.0-alpha.480" />

@@ -1,5 +1,5 @@
 using AlboV2.Shared.Models.Dtos;
-using MediatR;
+using Mediator;
 
 namespace AlboV2.Features.DiscordCommands;
 
@@ -14,7 +14,7 @@ public class GetMalcolmTurnbullImageQueryHandler : IRequestHandler<GetMalcolmTur
         
     }
 
-    public async Task<MalcolmTurnbullImageResult> Handle(GetMalcolmTurnbullImageQuery request,
+    public ValueTask<MalcolmTurnbullImageResult> Handle(GetMalcolmTurnbullImageQuery request,
         CancellationToken cancellationToken)
     {
         string imagePath = Path.Combine(AppContext.BaseDirectory,  "Assets", "Turnbull", "MalcolmTurnbull.jpg");
@@ -30,7 +30,7 @@ public class GetMalcolmTurnbullImageQueryHandler : IRequestHandler<GetMalcolmTur
             Path.GetFileName(imagePath),
             "image/jpeg"
             );
-        
-        return new MalcolmTurnbullImageResult(fileResponse);
+
+        return ValueTask.FromResult(new MalcolmTurnbullImageResult(fileResponse));
     }
 }

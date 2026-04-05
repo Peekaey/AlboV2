@@ -1,4 +1,5 @@
 using AlboV2.Features.DiscordCommands;
+using Mediator;
 using NetCord;
 using NetCord.Gateway;
 using NetCord.Hosting.Gateway;
@@ -48,9 +49,19 @@ public static class BuilderConfiguration
     {
         Console.WriteLine("Executing ConfigureServicesBuilder...");
 
-        builder.Services.AddMediatR(config =>
+        builder.Services.AddMediator((MediatorOptions options) =>
         {
-            config.RegisterServicesFromAssemblyContaining<GetPingQuery>();
+            options.Namespace = "AlboV2.Mediator";
+            options.ServiceLifetime = ServiceLifetime.Singleton;
+            // Only available from v3:
+            options.GenerateTypesAsInternal = true;
+            options.NotificationPublisherType = typeof(Mediator.ForeachAwaitPublisher);
+            // options.Assemblies = [typeof(...)];
+            // options.Types = [typeof(IModuleMarker)];
+            options.PipelineBehaviors = [];
+            options.StreamPipelineBehaviors = [];
+            // Only available from v3.1:
+            // options.CachingMode = CachingMode.Eager;
         });
     }
 
