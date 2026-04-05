@@ -40,10 +40,9 @@ public class GetMalcolmTurnbullImageQueryHandlerTests : IDisposable
         Assert.NotNull(result);
         Assert.NotNull(result.fileResponse);
         
-        // Assuming FileResponse exposes these based on your constructor arguments
-        Assert.Equal("MalcolmTurnbull.jpg", result.fileResponse.fileName); // Check file name
-        Assert.Equal("image/jpeg", result.fileResponse.contentType);       // Check content type
-        Assert.True(result.fileResponse.content.Length > 0);                // Ensure stream is open/populated
+        Assert.Equal("MalcolmTurnbull.jpg", result.fileResponse.fileName); 
+        Assert.Equal("image/jpeg", result.fileResponse.contentType);       
+        Assert.True(result.fileResponse.content.Length > 0);   
 
         // Clean up the opened stream so the file lock is released
         await result.fileResponse.content.DisposeAsync();
