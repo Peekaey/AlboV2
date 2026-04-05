@@ -5,7 +5,7 @@ using MediatR;
 using NetCord.Rest;
 using NetCord.Services.ApplicationCommands;
 
-namespace AlboV2.DiscordBot.Commands;
+namespace AlboV2.DiscordBot.DiscordCommands;
 
 public class PingDiscordCommand : ApplicationCommandModule<ApplicationCommandContext>
 {
@@ -18,7 +18,7 @@ public class PingDiscordCommand : ApplicationCommandModule<ApplicationCommandCon
         _mediator = mediator;
     }
 
-    [SlashCommand("ping", "replies with Pong!")]
+    [SlashCommand("ping", "replies with pong!")]
     public async Task SendPingAsync()
     {
         using var scope = _logger.BeginInteractionScope(Context);
@@ -36,11 +36,11 @@ public class PingDiscordCommand : ApplicationCommandModule<ApplicationCommandCon
                 Content = result.Message
             });
 
-            _logger.LogInteractionSuccess(stopwatch.Elapsed.TotalMilliseconds);
+            _logger.LogInteractionSuccess(stopwatch.Elapsed.TotalSeconds);
         }
         catch (Exception e)
         {
-            _logger.LogInteractionError(e, stopwatch.Elapsed.TotalMilliseconds);
+            _logger.LogInteractionError(e, stopwatch.Elapsed.TotalSeconds);
             
             await Context.Interaction.SendFollowupMessageAsync(new InteractionMessageProperties
             {

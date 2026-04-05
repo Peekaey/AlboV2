@@ -4,11 +4,15 @@
         <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>AlboV2.Services</RootNamespace>
+        <RootNamespace>AlboV2.Features</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="MediatR" Version="14.1.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\AlboV2.Shared\AlboV2.Shared.csproj" />
     </ItemGroup>
 
 </Project>
