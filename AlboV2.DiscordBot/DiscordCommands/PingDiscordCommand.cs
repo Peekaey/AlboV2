@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using AlboV2.Features.DiscordCommands;
 using AlboV2.Shared.Helpers;
-using MediatR;
+using Mediator;
 using NetCord.Rest;
 using NetCord.Services.ApplicationCommands;
 

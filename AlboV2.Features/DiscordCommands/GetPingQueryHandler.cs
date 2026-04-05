@@ -1,4 +1,4 @@
-using MediatR;
+using Mediator;
 
 namespace AlboV2.Features.DiscordCommands;
 
@@ -13,9 +13,8 @@ public class GetPingQueryHandler : IRequestHandler<GetPingQuery, PingResult>
 
     }
 
-    public Task<PingResult> Handle(GetPingQuery request, CancellationToken cancellationToken)
+    public async ValueTask<PingResult> Handle(GetPingQuery request, CancellationToken cancellationToken)
     {
-            var result = new PingResult("Pong!");
-            return Task.FromResult(result);
+            return new PingResult("Pong!");
     }
 }
