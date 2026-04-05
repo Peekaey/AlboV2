@@ -24,4 +24,8 @@
       <ProjectReference Include="..\AlboV2.Features\AlboV2.Features.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Helpers\" />
+    </ItemGroup>
+
 </Project>

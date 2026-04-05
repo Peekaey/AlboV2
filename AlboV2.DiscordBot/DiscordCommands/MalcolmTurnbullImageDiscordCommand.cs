@@ -30,7 +30,7 @@ public class MalcolmTurnbullImageDiscordCommand :ApplicationCommandModule<Applic
             await Context.Interaction.SendResponseAsync(InteractionCallback.DeferredMessage());
             MalcolmTurnbullImageResult result = await _mediator.Send(new GetMalcolmTurnbullImageQuery());
             
-            AttachmentProperties attachment = new AttachmentProperties("MalcolmTurnbull.jpg", result.fileResponse.content);
+            AttachmentProperties attachment = new AttachmentProperties(result.fileResponse.fileName, result.fileResponse.content);
 
             await Context.Interaction.SendFollowupMessageAsync(
                 new InteractionMessageProperties
