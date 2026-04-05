@@ -14,7 +14,7 @@ public class GetMalcolmTurnbullImageQueryHandler : IRequestHandler<GetMalcolmTur
         
     }
 
-    public async ValueTask<MalcolmTurnbullImageResult> Handle(GetMalcolmTurnbullImageQuery request,
+    public ValueTask<MalcolmTurnbullImageResult> Handle(GetMalcolmTurnbullImageQuery request,
         CancellationToken cancellationToken)
     {
         string imagePath = Path.Combine(AppContext.BaseDirectory,  "Assets", "Turnbull", "MalcolmTurnbull.jpg");
@@ -30,7 +30,7 @@ public class GetMalcolmTurnbullImageQueryHandler : IRequestHandler<GetMalcolmTur
             Path.GetFileName(imagePath),
             "image/jpeg"
             );
-        
-        return new MalcolmTurnbullImageResult(fileResponse);
+
+        return ValueTask.FromResult(new MalcolmTurnbullImageResult(fileResponse));
     }
 }

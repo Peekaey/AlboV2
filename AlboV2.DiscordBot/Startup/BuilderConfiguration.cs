@@ -51,7 +51,7 @@ public static class BuilderConfiguration
 
         builder.Services.AddMediator((MediatorOptions options) =>
         {
-            options.Namespace = "SimpleConsole.Mediator";
+            options.Namespace = "AlboV2.Mediator";
             options.ServiceLifetime = ServiceLifetime.Singleton;
             // Only available from v3:
             options.GenerateTypesAsInternal = true;

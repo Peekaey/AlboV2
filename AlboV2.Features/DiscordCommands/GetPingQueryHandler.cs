@@ -13,8 +13,8 @@ public class GetPingQueryHandler : IRequestHandler<GetPingQuery, PingResult>
 
     }
 
-    public async ValueTask<PingResult> Handle(GetPingQuery request, CancellationToken cancellationToken)
+    public ValueTask<PingResult> Handle(GetPingQuery request, CancellationToken cancellationToken)
     {
-            return new PingResult("Pong!");
+        return ValueTask.FromResult(new PingResult("Pong!"));
     }
 }
