@@ -16,7 +16,7 @@ public class GetRemindSomeoneToDisconnectQueryHandlerTests : IDisposable
         CleanupTestFiles();
     }
     [Fact]
-    public async Task Handle_WhenFileExists_ReturnsRemindEveryoneToDisconnectResult()
+    public async Task Handle_WhenFileExists_ReturnsRemindSomeoneToDisconnectResult()
     {
         // Arrange
         Directory.CreateDirectory(_targetDirectory);
