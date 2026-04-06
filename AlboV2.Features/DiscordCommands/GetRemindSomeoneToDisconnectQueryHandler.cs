@@ -4,19 +4,18 @@ using Mediator;
 
 namespace AlboV2.Features.DiscordCommands;
 
+public record GetRemindSomeoneToDisconnectQuery() : IRequest<RemindSomeoneToDisconnectResult>;
 
-public record GetRemindEveryoneToDisconnectQuery() : IRequest<RemindEveryoneToDisconnectResult>;
+public record RemindSomeoneToDisconnectResult(FileResponse fileResponse);
 
-public record RemindEveryoneToDisconnectResult(FileResponse fileResponse);
-
-public class GetRemindEveryoneToDisconnectQueryHandler : IRequestHandler<GetRemindEveryoneToDisconnectQuery, RemindEveryoneToDisconnectResult>
+public class GetRemindSomeoneToDisconnectQueryHandler : IRequestHandler<GetRemindSomeoneToDisconnectQuery, RemindSomeoneToDisconnectResult>
 {
-    public GetRemindEveryoneToDisconnectQueryHandler()
+    public GetRemindSomeoneToDisconnectQueryHandler()
     {
         
     }
 
-    public ValueTask<RemindEveryoneToDisconnectResult> Handle(GetRemindEveryoneToDisconnectQuery request,
+    public ValueTask<RemindSomeoneToDisconnectResult> Handle(GetRemindSomeoneToDisconnectQuery request,
         CancellationToken cancellationToken)
     {
         string fileName = ImageHelpers.GetRngAlboFilename();
@@ -34,6 +33,6 @@ public class GetRemindEveryoneToDisconnectQueryHandler : IRequestHandler<GetRemi
             "video/quicktime"
         );
 
-        return ValueTask.FromResult(new RemindEveryoneToDisconnectResult(fileResponse));
+        return ValueTask.FromResult(new RemindSomeoneToDisconnectResult(fileResponse));
     }
 }

@@ -3,11 +3,11 @@ using AlboV2.Features.DiscordCommands;
 namespace AlboV2.Tests.Features.DiscordCommands;
 
 [Collection("Albo Tests")]
-public class GetRemindEveryoneToDisconnectQueryHandlerTests : IDisposable
+public class GetRemindSomeoneToDisconnectQueryHandlerTests : IDisposable
 {
     private readonly string _targetDirectory;
 
-    public GetRemindEveryoneToDisconnectQueryHandlerTests()
+    public GetRemindSomeoneToDisconnectQueryHandlerTests()
     {
         // Set up the directory path
         _targetDirectory = Path.Combine(AppContext.BaseDirectory, "Assets", "Albo");
@@ -15,9 +15,8 @@ public class GetRemindEveryoneToDisconnectQueryHandlerTests : IDisposable
         // Ensure a clean state before the test starts
         CleanupTestFiles();
     }
-
     [Fact]
-    public async Task Handle_WhenFileExists_ReturnsRemindEveryoneToDisconnectResult()
+    public async Task Handle_WhenFileExists_ReturnsRemindSomeoneToDisconnectResult()
     {
         // Arrange
         Directory.CreateDirectory(_targetDirectory);
@@ -28,8 +27,8 @@ public class GetRemindEveryoneToDisconnectQueryHandlerTests : IDisposable
             await File.WriteAllBytesAsync(filePath, new byte[] { 0x00, 0x00 }); 
         }
 
-        var handler = new GetRemindEveryoneToDisconnectQueryHandler();
-        var query = new GetRemindEveryoneToDisconnectQuery();
+        var handler = new GetRemindSomeoneToDisconnectQueryHandler();
+        var query = new GetRemindSomeoneToDisconnectQuery();
 
         // Act
         var result = await handler.Handle(query, CancellationToken.None);
