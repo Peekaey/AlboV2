@@ -2,6 +2,7 @@ using AlboV2.Features.DiscordCommands;
 
 namespace AlboV2.Tests.Features.DiscordCommands;
 
+[Collection("Albo Tests")]
 public class GetRemindEveryoneToDisconnectQueryHandlerTests : IDisposable
 {
     private readonly string _targetDirectory;
