@@ -114,12 +114,12 @@ public static class BuilderConfiguration
         
         var enableRemoteLogging = configuration["EnableRemoteLogging"];
 
-        if (string.IsNullOrEmpty(enableRemoteLogging) || !bool.TryParse(enableRemoteLogging, out _))
+        if (string.IsNullOrEmpty(enableRemoteLogging) || !bool.TryParse(enableRemoteLogging, out var enableRemoteLoggingValue))
         {
             throw new ArgumentException("EnableRemoteLogging option not specified or invalid parameter provided - must be provided and set to true or false");
         }
 
-        if (enableRemoteLogging.ToLower() == "true")
+        if (enableRemoteLoggingValue)
         {
             var lokiUsername = configuration["LokiUsername"];
             var lokiApiToken = configuration["LokiApiToken"];
@@ -127,7 +127,7 @@ public static class BuilderConfiguration
 
             if (string.IsNullOrEmpty(lokiUrl) || string.IsNullOrEmpty(lokiUsername) || string.IsNullOrEmpty(lokiApiToken))
             {
-                throw new ArgumentException("Endpoint, Username and ApiToken must be provided for Loki Instance");
+                throw new ArgumentException("LokiUrl, LokiUsername and LokiApiToken must be provided if EnableRemoteLogging set to true");
             }
         }
     }
@@ -148,15 +148,14 @@ public static class BuilderConfiguration
 
             if (!enableRemoteLogging) return;
             // Even though these parameters would have been validated already, double check just in case
-            var lokiUrl = builder.Configuration["LokiUrl"];
-            var lokiUsername = builder.Configuration["LokiUsername"];
-            var lokiApiToken = builder.Configuration["LokiApiToken"];
+            var lokiUrl = context.Configuration["LokiUrl"];
+            var lokiUsername = context.Configuration["LokiUsername"];
+            var lokiApiToken = context.Configuration["LokiApiToken"];
 
             if (string.IsNullOrEmpty(lokiUrl) || string.IsNullOrEmpty(lokiUsername) ||
                 string.IsNullOrEmpty(lokiApiToken))
             {
-                throw new ArgumentException(
-                    "LokiUrl,LokiUsername and lokiApiToken must be provided if EnableRemoteLogging set to true");
+                throw new ArgumentException("LokiUrl, LokiUsername and LokiApiToken must be provided if EnableRemoteLogging set to true");
             }
 
             configuration
