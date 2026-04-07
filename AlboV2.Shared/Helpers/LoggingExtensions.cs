@@ -28,13 +28,13 @@ public static partial class LoggingExtensions
         EventId = 2,
         Level = LogLevel.Information,
         Message = "Completed interaction successfully in {DurationS}s.")]
-    public static partial void LogInteractionSuccess(this ILogger logger, int durationS);
+    public static partial void LogInteractionSuccess(this ILogger logger,  double durationS);
 
     [LoggerMessage(
         EventId = 3,
         Level = LogLevel.Error,
         Message = "Interaction failed after {DurationS}s.")]
-    public static partial void LogInteractionError(this ILogger logger, Exception ex, int durationS);
+    public static partial void LogInteractionError(this ILogger logger, Exception ex,  double durationS);
     
     [LoggerMessage(
         EventId = 4,
@@ -46,13 +46,13 @@ public static partial class LoggingExtensions
         EventId = 5,
         Level = LogLevel.Information,
         Message = "Completed processing ScheduledTask in {DurationS}s.")]
-    public static partial void LogScheduledTaskSuccess(this ILogger logger, int durationS);
+    public static partial void LogScheduledTaskSuccess(this ILogger logger,  double durationS);
     
     [LoggerMessage(
         EventId = 6,
         Level = LogLevel.Information,
         Message = "ScheduledTask failed after {DurationS}s.")]
-    public static partial void LogScheduledTaskError(this ILogger logger, Exception ex, int durationS);
+    public static partial void LogScheduledTaskError(this ILogger logger, Exception ex,  double durationS);
     
     
 }
