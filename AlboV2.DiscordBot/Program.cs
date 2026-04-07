@@ -12,6 +12,7 @@ public class Program
         BuilderConfiguration.ValidateEnvironmentVariables(builder);
 
         BuilderConfiguration.ConfigureNetCordBuilder(builder);
+        BuilderConfiguration.ConfigureRemoteLogging(builder);
         ScheduleTaskConfiguration.ConfigureQuartzWithBackgroundJob(builder);
         var app = builder.Build();
         

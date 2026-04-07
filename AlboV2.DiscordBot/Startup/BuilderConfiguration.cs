@@ -9,7 +9,8 @@ using NetCord.Gateway;
 using NetCord.Hosting.Gateway;
 using NetCord.Hosting.Services.ApplicationCommands;
 using NetCord.Rest;
-
+using Serilog.Sinks.Grafana.Loki;
+using Serilog;
 namespace AlboV2.DiscordBot.Startup;
 
 public static class BuilderConfiguration
@@ -110,8 +111,67 @@ public static class BuilderConfiguration
         {
             throw new ArgumentException("EnableCaching option not specified or invalid parameter provided - must be provided and set to true or false");
         }
+        
+        var enableRemoteLogging = configuration["EnableRemoteLogging"];
+
+        if (string.IsNullOrEmpty(enableRemoteLogging) || !bool.TryParse(enableRemoteLogging, out var enableRemoteLoggingValue))
+        {
+            throw new ArgumentException("EnableRemoteLogging option not specified or invalid parameter provided - must be provided and set to true or false");
+        }
+
+        if (enableRemoteLoggingValue)
+        {
+            var lokiUsername = configuration["LokiUsername"];
+            var lokiApiToken = configuration["LokiApiToken"];
+            var lokiUrl = configuration["LokiUrl"];
+
+            if (string.IsNullOrEmpty(lokiUrl) || string.IsNullOrEmpty(lokiUsername) || string.IsNullOrEmpty(lokiApiToken))
+            {
+                throw new ArgumentException("LokiUrl, LokiUsername and LokiApiToken must be provided if EnableRemoteLogging set to true");
+            }
+        }
     }
-    
 
+    public static void ConfigureRemoteLogging(WebApplicationBuilder builder)
+    {
 
+        var environmentName = builder.Environment.EnvironmentName;
+
+        builder.Host.UseSerilog((context, configuration) =>
+        {
+            configuration
+                .ReadFrom.Configuration(context.Configuration)
+                .Enrich.FromLogContext()
+                .WriteTo.Console();
+
+            var enableRemoteLogging = context.Configuration.GetValue<bool>("EnableRemoteLogging");
+
+            if (!enableRemoteLogging) return;
+            // Even though these parameters would have been validated already, double check just in case
+            var lokiUrl = context.Configuration["LokiUrl"];
+            var lokiUsername = context.Configuration["LokiUsername"];
+            var lokiApiToken = context.Configuration["LokiApiToken"];
+
+            if (string.IsNullOrEmpty(lokiUrl) || string.IsNullOrEmpty(lokiUsername) ||
+                string.IsNullOrEmpty(lokiApiToken))
+            {
+                throw new ArgumentException("LokiUrl, LokiUsername and LokiApiToken must be provided if EnableRemoteLogging set to true");
+            }
+
+            configuration
+                .WriteTo.GrafanaLoki(
+                    lokiUrl,
+                    labels: new List<LokiLabel>
+                    {
+                        new() { Key = "app", Value = "Albo" },
+                        new() { Key = "environment", Value = environmentName },
+                    },
+                    credentials: new LokiCredentials
+                    {
+                        Login = lokiUsername,
+                        Password = lokiApiToken
+                    });
+        });
+
+    }
 }
