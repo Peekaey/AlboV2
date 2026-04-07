@@ -27,7 +27,7 @@ public class RemindEveryoneToDisconnectScheduledMessage : ISendRemindEveryoneToD
         await _restClient.SendMessageAsync(channelId, new MessageProperties
         {
             Attachments = new List<AttachmentProperties> { attachment },
-            Content = "@everyone — Just a reminder that the right to disconnect is now law. Because if you're not being paid 24 hours a day, you shouldn't be on call 24 hours a day"
+            Content = "@everyone — It is now 5:30PM on a weekday. Just a reminder that the right to disconnect is now law. Because if you're not being paid 24 hours a day, you shouldn't be on call 24 hours a day"
         });
     }
     
