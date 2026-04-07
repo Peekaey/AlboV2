@@ -1,13 +1,15 @@
 ﻿FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
 USER $APP_UID
 WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
+EXPOSE 5033
 
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["AlboV2.DiscordBot/AlboV2.DiscordBot.csproj", "AlboV2.DiscordBot/"]
+COPY ["AlboV2.Features/AlboV2.Features.csproj", "AlboV2.Features/"]
+COPY ["AlboV2.Shared/AlboV2.Shared.csproj", "AlboV2.Shared/"]
 RUN dotnet restore "AlboV2.DiscordBot/AlboV2.DiscordBot.csproj"
 COPY . .
 WORKDIR "/src/AlboV2.DiscordBot"
