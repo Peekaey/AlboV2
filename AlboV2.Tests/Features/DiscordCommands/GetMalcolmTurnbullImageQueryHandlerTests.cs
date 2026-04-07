@@ -1,12 +1,8 @@
-using System;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 using AlboV2.Features.DiscordCommands;
-using Xunit;
 
 namespace AlboV2.Tests.Features.DiscordCommands;
 
+[Collection("Albo Tests")]
 public class GetMalcolmTurnbullImageQueryHandlerTests : IDisposable
 {
     private readonly string _targetDirectory;

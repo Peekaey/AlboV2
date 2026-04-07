@@ -9,10 +9,7 @@ public class GetRemindEveryoneToDisconnectQueryHandlerTests : IDisposable
 
     public GetRemindEveryoneToDisconnectQueryHandlerTests()
     {
-        // Set up the directory path
         _targetDirectory = Path.Combine(AppContext.BaseDirectory, "Assets", "Albo");
-        
-        // Ensure a clean state before the test starts
         CleanupTestFiles();
     }
 
@@ -21,11 +18,11 @@ public class GetRemindEveryoneToDisconnectQueryHandlerTests : IDisposable
     {
         // Arrange
         Directory.CreateDirectory(_targetDirectory);
-        
+
         for (int i = 1; i <= 6; i++)
         {
             string filePath = Path.Combine(_targetDirectory, $"albo{i}.mov");
-            await File.WriteAllBytesAsync(filePath, new byte[] { 0x00, 0x00 }); 
+            await File.WriteAllBytesAsync(filePath, new byte[] { 0x00, 0x00 });
         }
 
         var handler = new GetRemindEveryoneToDisconnectQueryHandler();
@@ -37,16 +34,32 @@ public class GetRemindEveryoneToDisconnectQueryHandlerTests : IDisposable
         // Assert
         Assert.NotNull(result);
         Assert.NotNull(result.fileResponse);
-        
+
         Assert.StartsWith("albo", result.fileResponse.fileName);
         Assert.EndsWith(".mov", result.fileResponse.fileName);
-        
+        Assert.Equal("video/quicktime", result.fileResponse.contentType);
+
         Assert.True(result.fileResponse.content.Length > 0);
-        
-        result.fileResponse.content.Dispose();
+
+        await result.fileResponse.content.DisposeAsync();
     }
-    
-    
+
+    [Fact]
+    public async Task Handle_WhenFileDoesNotExist_ThrowsFileNotFoundException()
+    {
+        // Arrange
+        var handler = new GetRemindEveryoneToDisconnectQueryHandler();
+        var query = new GetRemindEveryoneToDisconnectQuery();
+
+        // Act & Assert
+        var exception = await Assert.ThrowsAsync<FileNotFoundException>(async () =>
+            await handler.Handle(query, CancellationToken.None));
+
+        Assert.StartsWith("albo", exception.Message);
+        Assert.EndsWith(".mov", exception.Message);
+        Assert.StartsWith(_targetDirectory, exception.FileName);
+    }
+
     public void Dispose()
     {
         CleanupTestFiles();

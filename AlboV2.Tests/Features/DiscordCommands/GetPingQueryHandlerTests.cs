@@ -10,10 +10,9 @@ public class GetPingQueryHandlerTests
         // Arrange
         var handler = new GetPingQueryHandler();
         var query = new GetPingQuery();
-        var cancellationToken = CancellationToken.None;
 
         // Act
-        var result = await handler.Handle(query, cancellationToken);
+        var result = await handler.Handle(query, CancellationToken.None);
 
         // Assert
         Assert.NotNull(result);

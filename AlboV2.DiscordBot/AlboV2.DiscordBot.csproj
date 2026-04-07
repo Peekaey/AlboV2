@@ -19,11 +19,15 @@
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
+      <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.5" />
       <PackageReference Include="NetCord" Version="1.0.0-alpha.480" />
       <PackageReference Include="NetCord.Hosting" Version="1.0.0-alpha.480" />
       <PackageReference Include="NetCord.Hosting.AspNetCore" Version="1.0.0-alpha.480" />
       <PackageReference Include="NetCord.Hosting.Services" Version="1.0.0-alpha.480" />
       <PackageReference Include="NetCord.Services" Version="1.0.0-alpha.480" />
+      <PackageReference Include="Quartz" Version="3.17.1" />
+      <PackageReference Include="Quartz.Extensions.DependencyInjection" Version="3.17.1" />
+      <PackageReference Include="Quartz.Extensions.Hosting" Version="3.17.1" />
     </ItemGroup>
 
     <ItemGroup>
