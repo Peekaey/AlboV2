@@ -24,7 +24,7 @@ public class ScheduleTaskConfiguration
 
                 // Seconds | Minutes | Hours | DayOfMonth | Month| DayOfWeek | Year
                 // 5:30PM Monday-Friday AEST
-                .WithCronSchedule("0 30 11 ? * MON-FRI", x => x 
+                .WithCronSchedule("0 30 17 ? * MON-FRI", x => x 
                     // .InTimeZone(TimeZoneInfo.FindSystemTimeZoneById("Australia/Sydney")))
                     .InTimeZone(TimeZoneInfo.FindSystemTimeZoneById(builder.Configuration.GetValue<string>("TimeZoneId"))))
             );

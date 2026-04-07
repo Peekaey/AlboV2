@@ -7,9 +7,10 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        BuilderConfiguration.ValidateEnvironmentVariables(builder);
         BuilderConfiguration.ConfigureMiscServicesBuilder(builder);
         BuilderConfiguration.ConfigureServicesBuilder(builder);
+        BuilderConfiguration.ValidateEnvironmentVariables(builder);
+
         BuilderConfiguration.ConfigureNetCordBuilder(builder);
         ScheduleTaskConfiguration.ConfigureQuartzWithBackgroundJob(builder);
         var app = builder.Build();

@@ -2,6 +2,7 @@ using AlboV2.DiscordBot.DiscordCommands.Internal;
 using AlboV2.Features.DiscordCommands;
 using AlboV2.Features.ScheduledTasks;
 using AlboV2.Shared.Helpers;
+using AlboV2.Shared.Service;
 using Mediator;
 using NetCord;
 using NetCord.Gateway;
@@ -68,6 +69,7 @@ public static class BuilderConfiguration
         });
         
         builder.Services.AddTransient<ISendRemindEveryoneToDisconnectScheduledMessage, RemindEveryoneToDisconnectScheduledMessage>();
+        builder.Services.AddSingleton<IDateTimeHelperService, DateTimeHelperService>();
     }
 
     public static void ValidateEnvironmentVariables(WebApplicationBuilder builder)
@@ -93,12 +95,17 @@ public static class BuilderConfiguration
         {
             throw new ArgumentNullException(ianaTimezoneId, "TimezoneId must be provided");
         }
-        if (!DateTimeHelpers.TimezoneToIsoCode.TryGetValue(ianaTimezoneId, out var isoCode))
+        
+        using var serviceProvider = builder.Services.BuildServiceProvider();
+        var dateTimeHelperService = serviceProvider.GetRequiredService<IDateTimeHelperService>();
+        
+        if (!dateTimeHelperService.IsValidTimezone(ianaTimezoneId))
         {
             throw new ArgumentNullException(ianaTimezoneId, "iana TimezoneId specific to Australia must be provided");
         }
         Console.WriteLine("Provided TimezoneId: " + ianaTimezoneId);
     }
-    
+
+
 
 }
