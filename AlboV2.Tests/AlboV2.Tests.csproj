@@ -22,6 +22,7 @@
     <ItemGroup>
       <ProjectReference Include="..\AlboV2.DiscordBot\AlboV2.DiscordBot.csproj" />
       <ProjectReference Include="..\AlboV2.Features\AlboV2.Features.csproj" />
+      <ProjectReference Include="..\AlboV2.Shared\AlboV2.Shared.csproj" />
     </ItemGroup>
 
 </Project>
