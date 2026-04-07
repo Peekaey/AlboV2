@@ -1,4 +1,10 @@
 {
   "DISCORD_BOT_TOKEN": "",
-  "DISCORD_REMINDER_CHANNELID": ""
+  "DISCORD_REMINDER_CHANNELID": "",
+  "TimezoneId": "Australia/Sydney",
+  "EnableCaching": "true",
+  "EnableRemoteLogging": "true",
+  "LokiUrl": "",
+  "LokiUsername": "",
+  "LokiApiToken": ""
 }
