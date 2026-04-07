@@ -6,13 +6,18 @@ namespace AlboV2.Tests.Service;
 
 public class DateTimeHelperServiceTests
 {
-    private readonly Mock<ILogger<DateTimeHelperService>> _mockLogger;
+    private readonly Mock<ICacheService> _mockCacheService;
     private readonly DateTimeHelperService _sut;
 
+    [Obsolete("Obsolete")]
     public DateTimeHelperServiceTests()
     {
-        _mockLogger = new Mock<ILogger<DateTimeHelperService>>();
-        _sut = new DateTimeHelperService(_mockLogger.Object);
+        _mockCacheService = new Mock<ICacheService>();
+        _sut = new DateTimeHelperService(Mock.Of<ILogger<DateTimeHelperService>>(), _mockCacheService.Object);
+        
+        _mockCacheService
+            .Setup(x => x.GetCachedHolidays(It.IsAny<DateTime>(), It.IsAny<string>()))
+            .Returns<DateTime, string>((date, tz) => _sut.GetHolidaysAsync(date, tz));
     }
 
     #region IsValidTimezone

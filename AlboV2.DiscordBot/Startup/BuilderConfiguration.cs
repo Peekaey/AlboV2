@@ -45,14 +45,6 @@ public static class BuilderConfiguration
             logger.AddDebug();
         });
         
-        builder.Services.AddControllers();
-        
-    }
-
-    public static void ConfigureServicesBuilder(WebApplicationBuilder builder)
-    {
-        Console.WriteLine("Executing ConfigureServicesBuilder...");
-
         builder.Services.AddMediator((MediatorOptions options) =>
         {
             options.Namespace = "AlboV2.Mediator";
@@ -67,9 +59,20 @@ public static class BuilderConfiguration
             // Only available from v3.1:
             // options.CachingMode = CachingMode.Eager;
         });
+
+        builder.Services.AddHybridCache();
+        
+        builder.Services.AddControllers();
+        
+    }
+
+    public static void ConfigureServicesBuilder(WebApplicationBuilder builder)
+    {
+        Console.WriteLine("Executing ConfigureServicesBuilder...");
         
         builder.Services.AddTransient<ISendRemindEveryoneToDisconnectScheduledMessage, RemindEveryoneToDisconnectScheduledMessage>();
         builder.Services.AddSingleton<IDateTimeHelperService, DateTimeHelperService>();
+        builder.Services.AddSingleton<ICacheService, CacheService>();
     }
 
     public static void ValidateEnvironmentVariables(WebApplicationBuilder builder)
@@ -101,8 +104,14 @@ public static class BuilderConfiguration
             throw new ArgumentNullException(ianaTimezoneId, "iana TimezoneId specific to Australia must be provided");
         }
         Console.WriteLine("Provided TimezoneId: " + ianaTimezoneId);
+        
+        var enableCaching = configuration["EnableCaching"];
+        if (string.IsNullOrEmpty(enableCaching) || !bool.TryParse(enableCaching, out _))
+        {
+            throw new ArgumentException("EnableCaching option not specified or invalid parameter provided - must be provided and set to true or false");
+        }
     }
-
+    
 
 
 }
