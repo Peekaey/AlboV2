@@ -106,7 +106,7 @@ public static class BuilderConfiguration
         Console.WriteLine("Provided TimezoneId: " + ianaTimezoneId);
         
         var enableCaching = configuration["EnableCaching"];
-        if (string.IsNullOrEmpty(enableCaching) || enableCaching.ToLower() != "true" && enableCaching.ToLower() != "false")
+        if (string.IsNullOrEmpty(enableCaching) || !bool.TryParse(enableCaching, out _))
         {
             throw new ArgumentException("EnableCaching option not specified or invalid parameter provided - must be provided and set to true or false");
         }

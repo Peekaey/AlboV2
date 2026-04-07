@@ -12,11 +12,11 @@ public class CacheServiceTests
     private readonly FakeHybridCache _fakeHybridCache;
     private readonly Mock<ILogger<CacheService>> _mockLogger;
 
-    // Represents a minimal set of AU public holidays for use across tests
+
     private static readonly PublicHoliday[] SampleHolidays =
     [
-        new() { Date = new DateTime(2026, 1, 1), Counties = null },  // national
-        new() { Date = new DateTime(2026, 4, 25), Counties = null }, // national
+        new() { Date = new DateTime(2026, 1, 1), Counties = null },  
+        new() { Date = new DateTime(2026, 4, 25), Counties = null },
     ];
 
     public CacheServiceTests()
@@ -75,18 +75,50 @@ public class CacheServiceTests
     }
 
     [Fact]
-    public async Task GetCachedHolidays_CachingEnabled_UsesCorrectExpiration()
+    public async Task GetCachedHolidays_CachingEnabled_Uses28DayRollingWindow_WhenFarFromYearEnd()
     {
-        // Arrange
+        // Arrange — Jan 1 is ~365 days from year-end, well above the 28-day threshold
         _fakeHybridCache.ReturnValue = SampleHolidays;
 
         // Act
         await CreateSut().GetCachedHolidays(new DateTime(2026, 1, 1), "Australia/Sydney");
 
-        // Assert — 28-day TTL on both L1 and L2 cache layers
+        // Assert — rolling 28-day window applies when > 28 days remain in the year
         Assert.NotNull(_fakeHybridCache.CapturedOptions);
         Assert.Equal(TimeSpan.FromDays(28), _fakeHybridCache.CapturedOptions.Expiration);
         Assert.Equal(TimeSpan.FromDays(28), _fakeHybridCache.CapturedOptions.LocalCacheExpiration);
+    }
+
+    [Fact]
+    public async Task GetCachedHolidays_CachingEnabled_AlignsToYearEnd_WhenWithin28Days()
+    {
+        // Arrange — Dec 10 is 21 days 23:59:59 from year-end, within the 28-day threshold
+        var localDate = new DateTime(2026, 12, 10);
+        var expectedTtl = new DateTime(2026, 12, 31, 23, 59, 59) - localDate; // 21d 23:59:59
+        _fakeHybridCache.ReturnValue = SampleHolidays;
+
+        // Act
+        await CreateSut().GetCachedHolidays(localDate, "Australia/Sydney");
+
+        // Assert — TTL aligns to year-end, not a full 28 days
+        Assert.NotNull(_fakeHybridCache.CapturedOptions);
+        Assert.Equal(expectedTtl, _fakeHybridCache.CapturedOptions.Expiration);
+        Assert.Equal(expectedTtl, _fakeHybridCache.CapturedOptions.LocalCacheExpiration);
+    }
+
+    [Fact]
+    public async Task GetCachedHolidays_CachingEnabled_EnforcesMinimumOneHourTtl_NearMidnightOnDecember31()
+    {
+        // Arrange — 23:58 on Dec 31 leaves only ~2 minutes to year-end without the guard
+        _fakeHybridCache.ReturnValue = SampleHolidays;
+
+        // Act
+        await CreateSut().GetCachedHolidays(new DateTime(2026, 12, 31, 23, 58, 0), "Australia/Sydney");
+
+        // Assert — minimum 1-hour TTL prevents a near-zero expiration on the last night of the year
+        Assert.NotNull(_fakeHybridCache.CapturedOptions);
+        Assert.Equal(TimeSpan.FromHours(1), _fakeHybridCache.CapturedOptions.Expiration);
+        Assert.Equal(TimeSpan.FromHours(1), _fakeHybridCache.CapturedOptions.LocalCacheExpiration);
     }
 
     #endregion
@@ -117,7 +149,7 @@ public class CacheServiceTests
 
         // Assert — entry is removed so next call re-fetches from the API rather than serving null
         Assert.Equal(1, _fakeHybridCache.RemoveAsyncCallCount);
-        Assert.Equal("holidays", _fakeHybridCache.LastRemovedKey);
+        Assert.Equal("holidays_AU_2026", _fakeHybridCache.LastRemovedKey);
     }
 
     #endregion
@@ -148,6 +180,46 @@ public class CacheServiceTests
             CreateSut().GetCachedHolidays(new DateTime(2026, 1, 1), "Australia/Sydney"));
 
         Assert.Null(exception);
+    }
+
+    #endregion
+
+    #region GetCachedHolidays - Cache Key Isolation
+
+    [Theory]
+    [InlineData(2025, "holidays_AU_2025")]
+    [InlineData(2026, "holidays_AU_2026")]
+    [InlineData(2027, "holidays_AU_2027")]
+    public async Task GetCachedHolidays_UsesCacheKeyWithYear(int year, string expectedKey)
+    {
+        // Arrange
+        _fakeHybridCache.ReturnValue = SampleHolidays;
+
+        // Act
+        await CreateSut().GetCachedHolidays(new DateTime(year, 1, 1), "Australia/Sydney");
+
+        // Assert
+        Assert.Equal(expectedKey, _fakeHybridCache.LastGetOrCreateKey);
+    }
+
+    [Fact]
+    public async Task GetCachedHolidays_DifferentYears_UseDifferentCacheKeys()
+    {
+        // Arrange — a second fake so both calls are independent
+        var fake2026 = new FakeHybridCache { ReturnValue = SampleHolidays };
+        var fake2027 = new FakeHybridCache { ReturnValue = SampleHolidays };
+        var config = BuildConfiguration(enableCaching: true);
+        var sut2026 = new CacheService(fake2026, _mockLogger.Object, config);
+        var sut2027 = new CacheService(fake2027, _mockLogger.Object, config);
+
+        // Act
+        await sut2026.GetCachedHolidays(new DateTime(2026, 1, 1), "Australia/Sydney");
+        await sut2027.GetCachedHolidays(new DateTime(2027, 1, 1), "Australia/Sydney");
+
+        // Assert — each year maps to a distinct key
+        Assert.NotEqual(fake2026.LastGetOrCreateKey, fake2027.LastGetOrCreateKey);
+        Assert.Equal("holidays_AU_2026", fake2026.LastGetOrCreateKey);
+        Assert.Equal("holidays_AU_2027", fake2027.LastGetOrCreateKey);
     }
 
     #endregion
@@ -188,6 +260,7 @@ public class CacheServiceTests
         public int GetOrCreateCallCount { get; private set; }
         public int RemoveAsyncCallCount { get; private set; }
         public string? LastRemovedKey { get; private set; }
+        public string? LastGetOrCreateKey { get; private set; }
         public HybridCacheEntryOptions? CapturedOptions { get; private set; }
 
         public override ValueTask<T> GetOrCreateAsync<TState, T>(
@@ -196,6 +269,7 @@ public class CacheServiceTests
             CancellationToken cancellationToken = default)
         {
             GetOrCreateCallCount++;
+            LastGetOrCreateKey = key;
             CapturedOptions = options;
 
             if (ShouldThrow)

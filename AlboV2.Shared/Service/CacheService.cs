@@ -23,11 +23,24 @@ public class CacheService : ICacheService
         try
         {
             var enableCaching = _configuration.GetValue<bool>("EnableCaching");
-
+            
             if (enableCaching == true)
             {
+                string cacheKey = $"holidays_AU_{localDate.Year}";
+
+                var endOfYear = new DateTime(localDate.Year, 12, 31, 23, 59, 59);
+                var timeUntilEndOfYear = endOfYear - localDate;
+
+                // Use a year-end-aligned TTL in the last 28 days of the year to prevent
+                // the cache entry bleeding into the new year. For the rest of the year,
+                // use a rolling 28-day window. A minimum of 1 hour guards against a
+                // near-zero TTL on December 31 near midnight.
+                var expirationTime = timeUntilEndOfYear > TimeSpan.FromDays(28)
+                    ? TimeSpan.FromDays(28)
+                    : TimeSpan.FromTicks(Math.Max(timeUntilEndOfYear.Ticks, TimeSpan.FromHours(1).Ticks));
+                
                 var cachedData = await _hybridCache.GetOrCreateAsync(
-                    "holidays",
+                    cacheKey,
                     async cancellationToken =>
                     {
                         _logger.LogInformation("Cache miss - fetching latest holidays from Nager API");
@@ -36,13 +49,13 @@ public class CacheService : ICacheService
                     },
                     new HybridCacheEntryOptions
                     {
-                        Expiration = TimeSpan.FromDays(28),
-                        LocalCacheExpiration = TimeSpan.FromDays(28)
+                        Expiration = expirationTime,
+                        LocalCacheExpiration = expirationTime
                     });
 
                 if (cachedData is null)
                 {
-                    await _hybridCache.RemoveAsync("holidays");
+                    await _hybridCache.RemoveAsync(cacheKey);
                 }
 
                 return cachedData;
@@ -56,7 +69,7 @@ public class CacheService : ICacheService
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Failed to public holidays");
+            _logger.LogError(e, "Failed to fetch public holidays for year {Year} and time zone {TimeZoneId}", localDate.Year, ianaTimeZoneId);
             return null;
         }
     }
