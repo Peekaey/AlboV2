@@ -96,10 +96,7 @@ public static class BuilderConfiguration
             throw new ArgumentNullException(ianaTimezoneId, "TimezoneId must be provided");
         }
         
-        using var serviceProvider = builder.Services.BuildServiceProvider();
-        var dateTimeHelperService = serviceProvider.GetRequiredService<IDateTimeHelperService>();
-        
-        if (!dateTimeHelperService.IsValidTimezone(ianaTimezoneId))
+        if (!DateTimeHelperService.TimezoneToIsoCode.ContainsKey(ianaTimezoneId))
         {
             throw new ArgumentNullException(ianaTimezoneId, "iana TimezoneId specific to Australia must be provided");
         }

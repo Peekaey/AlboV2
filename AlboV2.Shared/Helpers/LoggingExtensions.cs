@@ -50,7 +50,7 @@ public static partial class LoggingExtensions
     
     [LoggerMessage(
         EventId = 6,
-        Level = LogLevel.Information,
+        Level = LogLevel.Error,
         Message = "ScheduledTask failed after {DurationS}s.")]
     public static partial void LogScheduledTaskError(this ILogger logger, Exception ex,  double durationS);
     

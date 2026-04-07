@@ -81,7 +81,7 @@ public class DateTimeHelperService : IDateTimeHelperService
     
     // Quartz.NET -> Negar.Date
     // IANA Timezone -> ISO Subdivision Code translator
-    public readonly Dictionary<string, string> TimezoneToIsoCode = new(StringComparer.OrdinalIgnoreCase)
+    public static readonly Dictionary<string, string> TimezoneToIsoCode = new(StringComparer.OrdinalIgnoreCase)
     {
         { "Australia/Sydney", "AU-NSW" },
         { "Australia/Melbourne", "AU-VIC" },

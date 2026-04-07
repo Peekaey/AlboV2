@@ -20,7 +20,8 @@ public class RemindEveryoneToDisconnectScheduledMessage : ISendRemindEveryoneToD
 
     public async Task SendRemindEveryoneToDisconnectScheduledMessage(RemindEveryoneToDisconnectResult result)
     {
-        AttachmentProperties attachment = new AttachmentProperties(result.fileResponse.fileName, result.fileResponse.content);
+        await using var content = result.fileResponse.content;
+        var attachment = new AttachmentProperties(result.fileResponse.fileName, content);
         
         var channelId = _configuration.GetValue<ulong>("DISCORD_REMINDER_CHANNELID");
         await _restClient.SendMessageAsync(channelId, new MessageProperties

@@ -83,7 +83,7 @@ public class DateTimeHelperServiceTests
     public void TimezoneToIsoCode_ContainsCorrectMappings(string timezone, string expectedIsoCode)
     {
         // Act
-        var result = _sut.TimezoneToIsoCode[timezone];
+        var result = DateTimeHelperService.TimezoneToIsoCode[timezone];
 
         // Assert
         Assert.Equal(expectedIsoCode, result);
@@ -92,7 +92,7 @@ public class DateTimeHelperServiceTests
     [Fact]
     public void TimezoneToIsoCode_ContainsTenEntries()
     {
-        Assert.Equal(10, _sut.TimezoneToIsoCode.Count);
+        Assert.Equal(10, DateTimeHelperService.TimezoneToIsoCode.Count);
     }
 
     #endregion

@@ -38,7 +38,7 @@ public class SendRemindEveryoneToDisconnectScheduledTask : IJob
         if (isPublicHoliday)
         {
             _logger.LogInformation("Today is a public holiday. Skipping the right to disconnect reminder...");
-            _logger.LogScheduledTaskSuccess(stopwatch.Elapsed.Seconds);
+            _logger.LogScheduledTaskSuccess(stopwatch.Elapsed.TotalSeconds);
             return;
         }
 
@@ -46,12 +46,12 @@ public class SendRemindEveryoneToDisconnectScheduledTask : IJob
         {
             RemindEveryoneToDisconnectResult result = await _mediator.Send(new GetRemindEveryoneToDisconnectQuery());
             await _sendRemindEveryoneToDisconnectScheduledMessage.SendRemindEveryoneToDisconnectScheduledMessage(result);
-            _logger.LogScheduledTaskSuccess(stopwatch.Elapsed.Seconds);
+            _logger.LogScheduledTaskSuccess(stopwatch.Elapsed.TotalSeconds);
         }
         catch (Exception e)
         {
             _logger.LogError(e, "SendRemindEveryoneToDisconnectScheduledMessage failed");
-            _logger.LogScheduledTaskError(e, stopwatch.Elapsed.Seconds);
+            _logger.LogScheduledTaskError(e, stopwatch.Elapsed.TotalSeconds);
         }
     }
     
