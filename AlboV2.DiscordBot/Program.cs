@@ -11,7 +11,7 @@ public class Program
         BuilderConfiguration.ConfigureMiscServicesBuilder(builder);
         BuilderConfiguration.ConfigureServicesBuilder(builder);
         BuilderConfiguration.ConfigureNetCordBuilder(builder);
-        
+        ScheduleTaskConfiguration.ConfigureQuartzWithBackgroundJob(builder);
         var app = builder.Build();
         
         AppConfiguration.ConfigureApp(app);

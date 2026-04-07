@@ -1,4 +1,7 @@
+using AlboV2.DiscordBot.DiscordCommands.Internal;
 using AlboV2.Features.DiscordCommands;
+using AlboV2.Features.ScheduledTasks;
+using AlboV2.Shared.Helpers;
 using Mediator;
 using NetCord;
 using NetCord.Gateway;
@@ -63,6 +66,8 @@ public static class BuilderConfiguration
             // Only available from v3.1:
             // options.CachingMode = CachingMode.Eager;
         });
+        
+        builder.Services.AddTransient<ISendRemindEveryoneToDisconnectScheduledMessage, RemindEveryoneToDisconnectScheduledMessage>();
     }
 
     public static void ValidateEnvironmentVariables(WebApplicationBuilder builder)
@@ -82,6 +87,17 @@ public static class BuilderConfiguration
         {
             throw new ArgumentNullException(discordReminderChannelId, "DISCORD_REMINDER_CHANNELID must be provided");
         }
+        
+        var ianaTimezoneId = configuration["TimezoneId"];
+        if (string.IsNullOrEmpty(ianaTimezoneId))
+        {
+            throw new ArgumentNullException(ianaTimezoneId, "TimezoneId must be provided");
+        }
+        if (!DateTimeHelpers.TimezoneToIsoCode.TryGetValue(ianaTimezoneId, out var isoCode))
+        {
+            throw new ArgumentNullException(ianaTimezoneId, "iana TimezoneId specific to Australia must be provided");
+        }
+        Console.WriteLine("Provided TimezoneId: " + ianaTimezoneId);
     }
     
 
