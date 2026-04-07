@@ -5,10 +5,12 @@ namespace AlboV2.Shared.Service;
 
 public class DateTimeHelperService : IDateTimeHelperService
 {
+    private readonly ICacheService _cacheService;
     private readonly ILogger<DateTimeHelperService> _logger;
     
-    public DateTimeHelperService(ILogger<DateTimeHelperService> logger)
+    public DateTimeHelperService(ILogger<DateTimeHelperService> logger, ICacheService cacheService)
     {
+        _cacheService = cacheService;
         _logger = logger;
     }
     
@@ -40,7 +42,7 @@ public class DateTimeHelperService : IDateTimeHelperService
     public async Task<bool> IsDatePublicHoliday(DateTime utcDate, string ianaTimeZoneId)
     {
         var localDate = ConvertUtcToLocalTime(utcDate, ianaTimeZoneId);
-        var allYearAuHolidays = await GetHolidaysAsync(localDate, ianaTimeZoneId);
+        var allYearAuHolidays = await _cacheService.GetCachedHolidays(localDate, ianaTimeZoneId);
 
         // Means no Australian public holidays 0_o
         if (allYearAuHolidays is null || allYearAuHolidays.Length == 0)
@@ -72,7 +74,8 @@ public class DateTimeHelperService : IDateTimeHelperService
         
     }
 
-    private async Task<PublicHoliday[]?> GetHolidaysAsync(DateTime localDate, string ianaTimeZoneId)
+    [Obsolete]
+    public async Task<PublicHoliday[]?> GetHolidaysAsync(DateTime localDate, string ianaTimeZoneId)
     {
         using var holidayClient = new HolidayClient();
         var holidays = await holidayClient.GetHolidaysAsync(localDate.Year, "AU");
@@ -97,7 +100,7 @@ public class DateTimeHelperService : IDateTimeHelperService
 
     public bool IsValidTimezone(string ianaTimezoneId) => TimezoneToIsoCode.ContainsKey(ianaTimezoneId);
     
-    private  DateTime ConvertUtcToLocalTime(DateTime utc, string ianaTimeZoneId)
+    public DateTime ConvertUtcToLocalTime(DateTime utc, string ianaTimeZoneId)
     {
         var tz = TimeZoneInfo.FindSystemTimeZoneById(ianaTimeZoneId);
         return TimeZoneInfo.ConvertTimeFromUtc(utc, tz);
