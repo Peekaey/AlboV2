@@ -2,24 +2,25 @@ using System.Diagnostics;
 using AlboV2.Features.DiscordCommands;
 using AlboV2.Shared.Helpers;
 using Mediator;
+using NetCord;
 using NetCord.Rest;
 using NetCord.Services.ApplicationCommands;
 
 namespace AlboV2.DiscordBot.DiscordCommands;
 
-public class RemindEveryoneToDisconnectCommand : ApplicationCommandModule<ApplicationCommandContext>
+public class DisconnectCheckCommand : ApplicationCommandModule<ApplicationCommandContext>
 {
-    private readonly ILogger<RemindEveryoneToDisconnectCommand> _logger;
+    private readonly ILogger<DisconnectCheckCommand> _logger;
     private readonly IMediator _mediator;
-
-    public RemindEveryoneToDisconnectCommand(ILogger<RemindEveryoneToDisconnectCommand> logger, IMediator mediator)
+    
+    public DisconnectCheckCommand(ILogger<DisconnectCheckCommand> logger, IMediator mediator)
     {
         _logger = logger;
         _mediator = mediator;
     }
 
-    [SlashCommand("remind_everyone_to_disconnect", "reminds everyone in the server about the right to disconnect")]
-    public async Task SendRemindEveryoneToDisconnect()
+    [SlashCommand("disconnect_check", "check if someone has disconnected after work hours")]
+    public async Task SendDisconnectCheckCommand([SlashCommandParameter(Description = "User to check")] User wagie)
     {
         using var scope = _logger.BeginInteractionScope(Context);
         var stopwatch = Stopwatch.StartNew();
@@ -28,20 +29,19 @@ public class RemindEveryoneToDisconnectCommand : ApplicationCommandModule<Applic
         try
         {
             await Context.Interaction.SendResponseAsync(InteractionCallback.DeferredMessage());
-            RemindEveryoneToDisconnectResult result = await _mediator.Send(new GetRemindEveryoneToDisconnectQuery());
+            DisconnectCheckResult result = await _mediator.Send(new GetDisconnectCheckQuery());
 
             AttachmentProperties attachment =
                 new AttachmentProperties(result.fileResponse.fileName, result.fileResponse.content);
-            
+
             await Context.Interaction.SendFollowupMessageAsync(
                 new InteractionMessageProperties
                 {
                     Attachments = new List<AttachmentProperties> { attachment },
-                    Content = "@everyone — Just a reminder that the right to disconnect is now law. Because if you're not being paid 24 hours a day, you shouldn't be on call 24 hours a day"
+                    Content = $"<@{wagie.Id}> — Have you disconnected today? If not, please do so now"
                 });
 
             _logger.LogInteractionSuccess(stopwatch.Elapsed.TotalSeconds);
-            
         }
         catch (Exception e)
         {
@@ -49,9 +49,8 @@ public class RemindEveryoneToDisconnectCommand : ApplicationCommandModule<Applic
 
             await Context.Interaction.SendFollowupMessageAsync(new InteractionMessageProperties
             {
-                Content = "Unexpected error occurred when running the remind_everyone_to_disconnect command"
+                Content = "Unexpected error occurred when running the disconnect_check command"
             });
         }
-        
     }
 }
